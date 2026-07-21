@@ -1,3 +1,5 @@
 @echo off
+echo Starting Codex Skin Plus Manager...
 cd /d "%~dp0app"
-npx electron .
+node server.js
+pause
