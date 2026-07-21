@@ -1,0 +1,16 @@
+{
+  "name": "codex-skin-plus",
+  "version": "1.0.0",
+  "description": "Codex Skin Plus - Desktop Theme Manager",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": ["codex", "skin", "theme"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^36.5.0"
+  }
+}
