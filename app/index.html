@@ -203,12 +203,30 @@
       border-radius: 12px;
       border: 1px dashed var(--border);
     }
+  
+    body.light {
+      --bg: #f5f5f5;
+      --bg-card: #ffffff;
+      --bg-hover: #f0f0f0;
+      --border: #e0e0e0;
+      --text: #1a1a2e;
+      --text-dim: #666666;
+      --accent: #d4a640;
+      --accent-dim: rgba(212, 166, 64, 0.12);
+    }
+    body.light .header { background: rgba(245, 245, 245, 0.95); }
+    body.light .sidebar { background: rgba(248, 248, 248, 0.95); }
+    body.light .toast { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
   </style>
 </head>
 <body>
   <div class="header">
     <h1>Codex Skin Plus Manager</h1>
-    <span style="font-size:12px;color:var(--text-dim)">localhost:30200</span>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="btn btn-secondary" style="padding:6px 12px;font-size:12px" onclick="toggleTheme()" id="themeToggle">Light</button>
+      <button class="btn btn-secondary" style="padding:6px 12px;font-size:12px" onclick="toggleLang()" id="langToggle">EN</button>
+    </div>
   </div>
   <div class="layout">
     <div class="sidebar">
@@ -238,88 +256,169 @@
         <div id="themesContainer"></div>
       </div>
       <div class="page" id="create">
-        <h2>Create New Theme</h2>
+        <h2><span data-i18n="createTheme">Create New Theme</span></h2>
         <div class="form-group">
-          <label>Theme Name</label>
+          <label><span data-i18n="themeName">Theme Name</span></label>
           <input type="text" id="newThemeName" placeholder="My Custom Theme">
         </div>
         <div class="form-group">
-          <label>Type</label>
+          <label data-i18n="type">Type</label>
           <select id="newThemeType">
-            <option value="video">Video Wallpaper (.mp4/.webm)</option>
-            <option value="image">Image Wallpaper (.jpg/.png/.webp/.svg)</option>
+            <option value="video"><span data-i18n="video">Video Wallpaper</span> (.mp4/.webm)</option>
+            <option value="image"><span data-i18n="image">Image Wallpaper</span> (.jpg/.png/.webp/.svg)</option>
           </select>
         </div>
         <div class="form-group">
-          <label>File</label>
+          <label data-i18n="file">File</label>
           <div style="display:flex;gap:8px">
             <input type="text" id="newThemeFile" placeholder="Select file..." readonly style="flex:1">
-            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">Browse</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()" data-i18n-btn="browse">Browse</button>
             <input type="file" id="fileInput" accept="video/mp4,video/webm,image/jpeg,image/png,image/webp" style="display:none" onchange="handleFileSelect(this)">
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="uploadAndCreateTheme()">Upload & Create</button>
+          <button class="btn btn-primary" onclick="uploadAndCreateTheme()" data-i18n-btn="uploadCreate">Upload & Create</button>
         </div>
       </div>
       <div class="page" id="palette">
-        <h2>Customize Palette</h2>
+        <h2><span data-i18n="customizePalette">Customize Palette</span></h2>
         <div class="form-group">
-          <label>Select Theme</label>
+          <label data-i18n="selectTheme">Select Theme</label>
           <select id="paletteThemeSelect" onchange="loadPalette()"></select>
         </div>
         <div class="palette-grid">
           <div class="form-group">
-            <label>Text Color (ink)</label>
+            <label><span data-i18n="textColor">Text Color</span> (ink)</label>
             <div class="color-row">
               <input type="color" id="pal-ink" onchange="syncColor('ink')">
               <input type="text" id="pal-ink-text" value="#E8E0D0">
             </div>
           </div>
           <div class="form-group">
-            <label>Accent Color</label>
+            <label><span data-i18n="accentColor">Accent Color</span></label>
             <div class="color-row">
               <input type="color" id="pal-accent" onchange="syncColor('accent')">
               <input type="text" id="pal-accent-text" value="#E8B84B">
             </div>
           </div>
           <div class="form-group">
-            <label>Background</label>
+            <label><span data-i18n="backgroundColor">Background</span></label>
             <div class="color-row">
               <input type="color" id="pal-surface" onchange="syncColor('surface')">
               <input type="text" id="pal-surface-text" value="#0F1320">
             </div>
           </div>
           <div class="form-group">
-            <label>Contrast (0-100)</label>
+            <label><span data-i18n="contrast">Contrast</span> (0-100)</label>
             <input type="number" id="pal-contrast" min="0" max="100" value="50">
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="savePalette()">Save</button>
-          <button class="btn btn-secondary" onclick="saveAndApply()">Save & Apply</button>
+          <button class="btn btn-primary" onclick="savePalette()" data-i18n-btn="save">Save</button>
+          <button class="btn btn-secondary" onclick="saveAndApply()" data-i18n-btn="saveApply">Save & Apply</button>
         </div>
       </div>
       <div class="page" id="settings">
         <h2>Settings</h2>
         <div class="form-group">
-          <label>Codex Installation Path</label>
+          <label><span data-i18n="codexPath">Codex Installation Path</span></label>
           <input type="text" id="settingCodexPath">
         </div>
         <div class="form-group">
-          <label>Debug Port</label>
+          <label><span data-i18n="debugPort">Debug Port</span></label>
           <input type="number" id="settingPort" value="30123">
         </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="saveSettings()">Save</button>
-          <button class="btn btn-danger" onclick="restoreOriginal()">Remove Skin</button>
-          <button class="btn btn-secondary" onclick="restoreDefault()">Restore Codex Default</button>
+          <button class="btn btn-danger" onclick="restoreOriginal()" data-i18n-btn="removeSkin">Remove Skin</button>
+          <button class="btn btn-secondary" onclick="restoreDefault()" data-i18n-btn="restoreDefault">Restore Codex Default</button>
         </div>
       </div>
     </div>
   </div>
   <div class="toast" id="toast"></div>
   <script>
+
+    // i18n translations
+    const i18n = {
+      zh: {
+        themes: '主题', create: '创建', palette: '调色板', settings: '设置',
+        available: '可用主题', refresh: '刷新', imageWallpapers: '图片壁纸',
+        videoWallpapers: '视频壁纸', active: '已激活', ready: '就绪',
+        createTheme: '创建新主题', themeName: '主题名称', type: '类型',
+        video: '视频壁纸', image: '图片壁纸', file: '文件',
+        browse: '浏览', uploadCreate: '上传并创建', customizePalette: '自定义配色',
+        selectTheme: '选择主题', textColor: '文字颜色', accentColor: '强调色',
+        backgroundColor: '背景色', contrast: '对比度', save: '保存',
+        saveApply: '保存并应用', codexPath: 'Codex 安装路径', debugPort: '调试端口',
+        removeSkin: '移除皮肤', restoreDefault: '恢复 Codex 默认', noThemes: '暂无主题',
+        themeApplied: '主题已应用!', themeCreated: '主题已创建!', saved: '已保存!',
+        restored: '已恢复默认! 请重启 Codex', confirmRemove: '确定移除皮肤?',
+        confirmRestore: '确定恢复 Codex 默认外观?', selectFile: '请选择文件',
+        enterName: '请输入主题名称', missingFile: '文件缺失', enterPath: '请输入路径'
+      },
+      en: {
+        themes: 'Themes', create: 'Create', palette: 'Palette', settings: 'Settings',
+        available: 'Available Themes', refresh: 'Refresh', imageWallpapers: 'Image Wallpapers',
+        videoWallpapers: 'Video Wallpapers', active: 'Active', ready: 'Ready',
+        createTheme: 'Create New Theme', themeName: 'Theme Name', type: 'Type',
+        video: 'Video Wallpaper', image: 'Image Wallpaper', file: 'File',
+        browse: 'Browse', uploadCreate: 'Upload & Create', customizePalette: 'Customize Palette',
+        selectTheme: 'Select Theme', textColor: 'Text Color', accentColor: 'Accent Color',
+        backgroundColor: 'Background', contrast: 'Contrast', save: 'Save',
+        saveApply: 'Save & Apply', codexPath: 'Codex Installation Path', debugPort: 'Debug Port',
+        removeSkin: 'Remove Skin', restoreDefault: 'Restore Codex Default', noThemes: 'No themes yet',
+        themeApplied: 'Theme applied!', themeCreated: 'Theme created!', saved: 'Saved!',
+        restored: 'Restored to default! Restart Codex', confirmRemove: 'Remove skin?',
+        confirmRestore: 'Restore Codex to default appearance?', selectFile: 'Please select a file',
+        enterName: 'Please enter a theme name', missingFile: 'Missing file', enterPath: 'Please enter path'
+      }
+    };
+
+    let currentLang = localStorage.getItem('codex-skin-lang') || 'zh';
+    let isLight = localStorage.getItem('codex-skin-theme') === 'light';
+
+    function t(key) { return i18n[currentLang][key] || key; }
+
+    function applyLang() {
+      // Update sidebar
+      document.querySelector('[data-page="themes"] span, [data-page="themes"]').lastChild.textContent = t('themes');
+      document.querySelector('[data-page="create"] span, [data-page="create"]').lastChild.textContent = t('create');
+      document.querySelector('[data-page="palette"] span, [data-page="palette"]').lastChild.textContent = t('palette');
+      document.querySelector('[data-page="settings"] span, [data-page="settings"]').lastChild.textContent = t('settings');
+      
+      // Update page headers and content
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = t(el.dataset.i18n);
+      });
+      
+      // Update button text
+      document.querySelectorAll('[data-i18n-btn]').forEach(el => {
+        el.textContent = t(el.dataset.i18nBtn);
+      });
+      
+      document.getElementById('langToggle').textContent = currentLang === 'zh' ? 'EN' : '中';
+    }
+
+    function applyTheme() {
+      document.body.classList.toggle('light', isLight);
+      document.getElementById('themeToggle').textContent = isLight ? 'Dark' : 'Light';
+    }
+
+    function toggleTheme() {
+      isLight = !isLight;
+      localStorage.setItem('codex-skin-theme', isLight ? 'light' : 'dark');
+      applyTheme();
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'zh' ? 'en' : 'zh';
+      localStorage.setItem('codex-skin-lang', currentLang);
+      applyLang();
+      renderThemes(); // Re-render with new language
+    }
+
+
     let themes = [];
     let currentConfig = {};
 
@@ -362,7 +461,7 @@
       let html = '';
       
       if (imageThemes.length > 0) {
-        html += `<h3>Image Wallpapers <span class="count">${imageThemes.length}</span></h3>`;
+        html += `<h3>${t('imageWallpapers')} <span class="count">${imageThemes.length}</span></h3>`;
         html += '<div class="theme-grid">';
         imageThemes.forEach(t => {
           html += createThemeCard(t);
@@ -371,7 +470,7 @@
       }
       
       if (videoThemes.length > 0) {
-        html += `<h3>Video Wallpapers <span class="count">${videoThemes.length}</span></h3>`;
+        html += `<h3>${t('videoWallpapers')} <span class="count">${videoThemes.length}</span></h3>`;
         html += '<div class="theme-grid">';
         videoThemes.forEach(t => {
           html += createThemeCard(t);
@@ -380,7 +479,7 @@
       }
       
       if (themes.length === 0) {
-        html = '<div class="empty-state">No themes found. Create one in the Create tab.</div>';
+        html = '<div class="empty-state">' + t('noThemes') + '</div>';
       }
       
       container.innerHTML = html;
@@ -416,8 +515,8 @@
             <span class="theme-type-badge ${t.type}">${t.type}</span>
           </div>
           <div class="theme-info">
-            <div class="theme-name">${t.name} ${isActive ? '<span class="badge active">Active</span>' : ''}</div>
-            <div class="theme-meta">${t.hasFile ? 'Ready' : 'Missing file'}</div>
+            <div class="theme-name">${t.name} ${isActive ? '<span class="badge active">' + t('active') + '</span>' : ''}</div>
+            <div class="theme-meta">${t.hasFile ? t('ready') : t('missingFile')}</div>
           </div>
         </div>
       `;
@@ -426,7 +525,7 @@
     async function applyTheme(id) {
       const result = await api('/api/apply', 'POST', { themeId: id });
       if (result.ok) {
-        showToast('Theme applied!', 'success');
+        showToast(t('themeApplied'), 'success');
         currentConfig.currentTheme = id;
         renderThemes();
       } else {
@@ -441,7 +540,7 @@
       if (!name || !filePath) { showToast('Please fill all fields', 'error'); return; }
       const result = await api('/api/create', 'POST', { name, filePath, type });
       if (result.ok) {
-        showToast('Theme created!', 'success');
+        showToast(t('themeCreated'), 'success');
         document.getElementById('newThemeName').value = '';
         document.getElementById('newThemeFile').value = '';
     
@@ -461,8 +560,8 @@
     async function uploadAndCreateTheme() {
       const name = document.getElementById('newThemeName').value;
       const type = document.getElementById('newThemeType').value;
-      if (!name) { showToast('Please enter a theme name', 'error'); return; }
-      if (!window.selectedFile) { showToast('Please select a file', 'error'); return; }
+      if (!name) { showToast(t('enterName'), 'error'); return; }
+      if (!window.selectedFile) { showToast(t('selectFile'), 'error'); return; }
 
       const formData = new FormData();
       formData.append('file', window.selectedFile);
@@ -477,7 +576,7 @@
           document.getElementById('newThemeName').value = '';
           document.getElementById('newThemeFile').value = '';
           window.selectedFile = null;
-          loadThemes();
+          applyTheme(); applyLang(); loadThemes();
         } else {
           showToast(result.error || 'Upload failed', 'error');
         }
@@ -488,7 +587,7 @@
 
     // Restore Codex default
     async function restoreDefault() {
-      if (!confirm('Restore Codex to default appearance? This will remove the skin.')) return;
+      if (!confirm(t('confirmRestore'))) return;
       const result = await api('/api/restore-default', 'POST');
       if (result.ok) {
         showToast('Restored to default! Restart Codex.', 'success');
@@ -536,7 +635,7 @@
         contrast: parseInt(document.getElementById('pal-contrast').value),
       };
       const result = await api('/api/palette', 'POST', { themeId: id, palette });
-      if (result.ok) showToast('Saved!', 'success');
+      if (result.ok) showToast(t('saved'), 'success');
       else showToast(result.error, 'error');
     }
 
@@ -560,7 +659,7 @@
     }
 
     async function restoreOriginal() {
-      if (!confirm('Remove skin?')) return;
+      if (!confirm(t('confirmRemove'))) return;
       await api('/api/restore', 'POST');
       currentConfig.currentTheme = null;
       renderThemes();
