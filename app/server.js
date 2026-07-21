@@ -195,7 +195,6 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ ok: true }));
   } 
-  else if (
   // File upload handler
   else if (parsed.pathname === "/api/upload" && req.method === "POST") {
     const contentType = req.headers["content-type"] || "";
