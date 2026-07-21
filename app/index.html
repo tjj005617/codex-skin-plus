@@ -85,6 +85,12 @@
       font-size: 11px;
       color: var(--text-dim);
       position: relative;
+      overflow: hidden;
+    }
+    .theme-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .theme-type {
       position: absolute;
@@ -308,7 +314,7 @@
       grid.innerHTML = themes.map(t => `
         <div class="theme-card ${t.id === currentConfig.currentTheme ? 'active' : ''}" onclick="applyTheme('${t.id}')">
           <div class="theme-preview">
-            <span>${t.type.toUpperCase()}</span>
+            ${t.hasFile && t.type === "image" ? '<img src="/api/preview/' + t.id + '" onerror="this.style.display=\'none\'">' : '<span>' + t.type.toUpperCase() + '</span>'}
             <span class="theme-type">${t.type}</span>
           </div>
           <div class="theme-info">

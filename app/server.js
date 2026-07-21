@@ -133,7 +133,31 @@ const server = http.createServer((req, res) => {
         fs.writeFileSync(themeJsonPath, JSON.stringify(themeData, null, 2), "utf8");
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ ok: true }));
+      } else if (parsed.pathname.startsWith("/api/preview/")) {
+    const themeId = parsed.pathname.split("/")[3];
+    const themes = getThemes();
+    const theme = themes.find(t => t.id === themeId);
+    if (theme && theme.hasFile) {
+      const filePath = path.join(theme.path, theme.image);
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeTypes = {
+        ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
+        ".webp": "image/webp", ".gif": "image/gif", ".svg": "image/svg+xml"
+      };
+      if (mimeTypes[ext]) {
+        const data = fs.readFileSync(filePath);
+        res.writeHead(200, { "Content-Type": mimeTypes[ext] });
+        res.end(data);
       } else {
+        // For video files, return a placeholder
+        res.writeHead(200, { "Content-Type": "image/svg+xml" });
+        res.end('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1a25"/><stop offset="100%" stop-color="#2a2a35"/></linearGradient></defs><rect fill="url(#g)" width="300" height="120"/><circle fill="#e8b84b" opacity="0.3" cx="150" cy="60" r="25"/><polygon fill="#e8b84b" points="142,48 142,72 168,60"/></svg>');
+      }
+    } else {
+      res.writeHead(404);
+      res.end("Not Found");
+    }
+  } else {
         res.writeHead(404, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Theme not found" }));
       }
@@ -154,6 +178,30 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       res.end(data);
     });
+  } else if (parsed.pathname.startsWith("/api/preview/")) {
+    const themeId = parsed.pathname.split("/")[3];
+    const themes = getThemes();
+    const theme = themes.find(t => t.id === themeId);
+    if (theme && theme.hasFile) {
+      const filePath = path.join(theme.path, theme.image);
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeTypes = {
+        ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
+        ".webp": "image/webp", ".gif": "image/gif"
+      };
+      if (mimeTypes[ext]) {
+        const data = fs.readFileSync(filePath);
+        res.writeHead(200, { "Content-Type": mimeTypes[ext] });
+        res.end(data);
+      } else {
+        // For video files, return a placeholder
+        res.writeHead(200, { "Content-Type": "image/svg+xml" });
+        res.end('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120"><rect fill="#1a1a25" width="300" height="120"/><text fill="#888898" font-family="sans-serif" font-size="14" x="150" y="65" text-anchor="middle">VIDEO PREVIEW</text></svg>');
+      }
+    } else {
+      res.writeHead(404);
+      res.end("Not Found");
+    }
   } else {
     res.writeHead(404);
     res.end("Not Found");
@@ -161,6 +209,21 @@ const server = http.createServer((req, res) => {
 });
 
 const PORT = 30200;
+
+// Kill existing process on port
+function killPort(port) {
+  try {
+    const result = require("child_process").execSync(
+      `netstat -ano | findstr :${port}`,
+      { encoding: "utf8" }
+    );
+    const match = result.match(/LISTENING\s+(\d+)/);
+    if (match) {
+      require("child_process").execSync(`taskkill /PID ${match[1]} /F`, { stdio: "ignore" });
+    }
+  } catch (e) {}
+}
+killPort(PORT);
 server.listen(PORT, () => {
   console.log(`Codex Skin Plus Manager running at http://localhost:${PORT}`);
   // Auto open browser
