@@ -185,8 +185,34 @@ const server = http.createServer((req, res) => {
         const data = fs.readFileSync(filePath);
         res.writeHead(200, { "Content-Type": mimeTypes[ext] });
         res.end(data);
+      } else if ([".mp4", ".webm"].includes(ext)) {
+        // Stream video file for preview
+        const stat = fs.statSync(filePath);
+        const range = req.headers.range;
+        
+        if (range) {
+          const parts = range.replace(/bytes=/, "").split("-");
+          const start = parseInt(parts[0], 10);
+          const end = parts[1] ? parseInt(parts[1], 10) : Math.min(start + 1024 * 1024, stat.size - 1);
+          const chunkSize = end - start + 1;
+          
+          res.writeHead(206, {
+            "Content-Range": "bytes " + start + "-" + end + "/" + stat.size,
+            "Accept-Ranges": "bytes",
+            "Content-Length": chunkSize,
+            "Content-Type": ext === ".mp4" ? "video/mp4" : "video/webm"
+          });
+          
+          fs.createReadStream(filePath, { start, end }).pipe(res);
+        } else {
+          res.writeHead(200, {
+            "Content-Length": stat.size,
+            "Content-Type": ext === ".mp4" ? "video/mp4" : "video/webm"
+          });
+          fs.createReadStream(filePath).pipe(res);
+        }
       } else {
-        // For video files, return a play button placeholder
+        // For other files, return a placeholder
         res.writeHead(200, { "Content-Type": "image/svg+xml" });
         res.end(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120">
           <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
