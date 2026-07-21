@@ -204,20 +204,22 @@
       border: 1px dashed var(--border);
     }
   
-    body.light {
-      --bg: #f5f5f5;
-      --bg-card: #ffffff;
-      --bg-hover: #f0f0f0;
-      --border: #e0e0e0;
-      --text: #1a1a2e;
-      --text-dim: #666666;
-      --accent: #d4a640;
-      --accent-dim: rgba(212, 166, 64, 0.12);
-    }
-    body.light .header { background: rgba(245, 245, 245, 0.95); }
-    body.light .sidebar { background: rgba(248, 248, 248, 0.95); }
-    body.light .toast { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    
 
+  
+    body.light {
+      --bg: #f8f9fa;
+      --bg-card: #ffffff;
+      --bg-hover: #eee;
+      --border: #ddd;
+      --text: #1a1a2e;
+      --text-dim: #666;
+      --accent: #c49a30;
+      --accent-dim: rgba(196, 154, 48, 0.12);
+    }
+    body.light .header { background: rgba(248, 249, 250, 0.95); border-bottom-color: #ddd; }
+    body.light .sidebar { background: rgba(248, 249, 250, 0.95); border-right-color: #ddd; }
+    body.light .toast { background: #fff; border-color: #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
@@ -455,15 +457,15 @@
 
     function renderThemes() {
       const container = document.getElementById('themesContainer');
-      const imageThemes = themes.filter(t => t.type === 'image');
-      const videoThemes = themes.filter(t => t.type === 'video');
+      const imageThemes = themes.filter(t => theme.type === 'image');
+      const videoThemes = themes.filter(t => theme.type === 'video');
       
       let html = '';
       
       if (imageThemes.length > 0) {
         html += `<h3>${t('imageWallpapers')} <span class="count">${imageThemes.length}</span></h3>`;
         html += '<div class="theme-grid">';
-        imageThemes.forEach(t => {
+        imageThemes.forEach(theme => {
           html += createThemeCard(t);
         });
         html += '</div>';
@@ -472,7 +474,7 @@
       if (videoThemes.length > 0) {
         html += `<h3>${t('videoWallpapers')} <span class="count">${videoThemes.length}</span></h3>`;
         html += '<div class="theme-grid">';
-        videoThemes.forEach(t => {
+        videoThemes.forEach(theme => {
           html += createThemeCard(t);
         });
         html += '</div>';
@@ -494,29 +496,29 @@
       });
     }
 
-    function createThemeCard(t) {
-      const isActive = t.id === currentConfig.currentTheme;
-      const previewUrl = '/api/preview/' + t.id;
+    function createThemeCard(theme) {
+      const isActive = theme.id === currentConfig.currentTheme;
+      const previewUrl = '/api/preview/' + theme.id;
       
       let previewHtml;
-      if (t.type === 'video') {
+      if (theme.type === 'video') {
         previewHtml = `
-          <video src="${previewUrl}" muted loop preload="none" style="background:#1a1a25"></video>
+          <video src="${previewUrl}" muted loop preload="metadata" playsinline style="background:#1a1a25"></video>
           
         `;
       } else {
-        previewHtml = `<img src="${previewUrl}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="background:#1a1a25"><div class="placeholder" style="display:none">${t.name}</div>`;
+        previewHtml = `<img src="${previewUrl}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="background:#1a1a25"><div class="placeholder" style="display:none">${theme.name}</div>`;
       }
       
       return `
-        <div class="theme-card ${isActive ? 'active' : ''}" data-type="${t.type}" onclick="applyTheme('${t.id}')">
+        <div class="theme-card ${isActive ? 'active' : ''}" data-type="${theme.type}" onclick="applyTheme('${theme.id}')">
           <div class="theme-preview">
             ${previewHtml}
-            <span class="theme-type-badge ${t.type}">${t.type}</span>
+            <span class="theme-type-badge ${theme.type}">${theme.type}</span>
           </div>
           <div class="theme-info">
-            <div class="theme-name">${t.name} ${isActive ? '<span class="badge active">' + t('active') + '</span>' : ''}</div>
-            <div class="theme-meta">${t.hasFile ? t('ready') : t('missingFile')}</div>
+            <div class="theme-name">${theme.name} ${isActive ? '<span class="badge active">' + t('active') + '</span>' : ''}</div>
+            <div class="theme-meta">${theme.hasFile ? t('ready') : t('missingFile')}</div>
           </div>
         </div>
       `;
@@ -604,13 +606,13 @@
 
     function updatePaletteSelect() {
       const select = document.getElementById('paletteThemeSelect');
-      select.innerHTML = themes.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      select.innerHTML = themes.map(t => `<option value="${theme.id}">${theme.name}</option>`).join('');
       if (themes.length > 0) loadPalette();
     }
 
     function loadPalette() {
       const id = document.getElementById('paletteThemeSelect').value;
-      const theme = themes.find(t => t.id === id);
+      const theme = themes.find(t => theme.id === id);
       if (!theme) return;
       const p = theme.palette;
       document.getElementById('pal-ink').value = p.ink;
