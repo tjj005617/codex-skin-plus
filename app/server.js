@@ -97,13 +97,26 @@ function createTheme(name, filePath, type) {
 const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
 
+  // API routes
   if (parsed.pathname === "/api/themes") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(getThemes()));
-  } else if (parsed.pathname === "/api/config") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(loadConfig()));
-  } else if (parsed.pathname === "/api/apply" && req.method === "POST") {
+  } 
+  else if (parsed.pathname === "/api/config") {
+    if (req.method === "POST") {
+      let body = "";
+      req.on("data", (chunk) => (body += chunk));
+      req.on("end", () => {
+        saveConfig(JSON.parse(body));
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ ok: true }));
+      });
+    } else {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(loadConfig()));
+    }
+  } 
+  else if (parsed.pathname === "/api/apply" && req.method === "POST") {
     let body = "";
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
@@ -111,7 +124,8 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(applyTheme(themeId)));
     });
-  } else if (parsed.pathname === "/api/create" && req.method === "POST") {
+  } 
+  else if (parsed.pathname === "/api/create" && req.method === "POST") {
     let body = "";
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
@@ -119,7 +133,8 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(createTheme(name, filePath, type)));
     });
-  } else if (parsed.pathname === "/api/palette" && req.method === "POST") {
+  } 
+  else if (parsed.pathname === "/api/palette" && req.method === "POST") {
     let body = "";
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
@@ -133,42 +148,63 @@ const server = http.createServer((req, res) => {
         fs.writeFileSync(themeJsonPath, JSON.stringify(themeData, null, 2), "utf8");
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ ok: true }));
-      } else if (parsed.pathname.startsWith("/api/preview/")) {
-    const themeId = parsed.pathname.split("/")[3];
-    const themes = getThemes();
-    const theme = themes.find(t => t.id === themeId);
-    if (theme && theme.hasFile) {
-      const filePath = path.join(theme.path, theme.image);
-      const ext = path.extname(filePath).toLowerCase();
-      const mimeTypes = {
-        ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
-        ".webp": "image/webp", ".gif": "image/gif", ".svg": "image/svg+xml"
-      };
-      if (mimeTypes[ext]) {
-        const data = fs.readFileSync(filePath);
-        res.writeHead(200, { "Content-Type": mimeTypes[ext] });
-        res.end(data);
       } else {
-        // For video files, return a placeholder
-        res.writeHead(200, { "Content-Type": "image/svg+xml" });
-        res.end('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1a25"/><stop offset="100%" stop-color="#2a2a35"/></linearGradient></defs><rect fill="url(#g)" width="300" height="120"/><circle fill="#e8b84b" opacity="0.3" cx="150" cy="60" r="25"/><polygon fill="#e8b84b" points="142,48 142,72 168,60"/></svg>');
-      }
-    } else {
-      res.writeHead(404);
-      res.end("Not Found");
-    }
-  } else {
         res.writeHead(404, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Theme not found" }));
       }
     });
-  } else if (parsed.pathname === "/api/restore" && req.method === "POST") {
+  } 
+  else if (parsed.pathname === "/api/restore" && req.method === "POST") {
     const config = loadConfig();
     config.currentTheme = null;
     saveConfig(config);
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ ok: true }));
-  } else if (parsed.pathname === "/") {
+  } 
+  else if (parsed.pathname.startsWith("/api/preview/")) {
+    // Preview handler - serves theme preview images
+    const themeId = parsed.pathname.split("/")[3];
+    const themes = getThemes();
+    const theme = themes.find((t) => t.id === themeId);
+    
+    if (theme && theme.hasFile) {
+      const filePath = path.join(theme.path, theme.image);
+      const ext = path.extname(filePath).toLowerCase();
+      
+      const mimeTypes = {
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".png": "image/png",
+        ".webp": "image/webp",
+        ".gif": "image/gif",
+        ".svg": "image/svg+xml"
+      };
+      
+      if (mimeTypes[ext]) {
+        // Serve the actual image file
+        const data = fs.readFileSync(filePath);
+        res.writeHead(200, { "Content-Type": mimeTypes[ext] });
+        res.end(data);
+      } else {
+        // For video files, return a play button placeholder
+        res.writeHead(200, { "Content-Type": "image/svg+xml" });
+        res.end(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1a1a25"/>
+            <stop offset="100%" stop-color="#2a2a35"/>
+          </linearGradient></defs>
+          <rect fill="url(#g)" width="300" height="120"/>
+          <circle fill="#e8b84b" opacity="0.3" cx="150" cy="60" r="25"/>
+          <polygon fill="#e8b84b" points="142,48 142,72 168,60"/>
+        </svg>`);
+      }
+    } else {
+      res.writeHead(404);
+      res.end("Not Found");
+    }
+  } 
+  else if (parsed.pathname === "/") {
+    // Serve the HTML page
     fs.readFile(path.join(__dirname, "index.html"), (err, data) => {
       if (err) {
         res.writeHead(500);
@@ -178,31 +214,8 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       res.end(data);
     });
-  } else if (parsed.pathname.startsWith("/api/preview/")) {
-    const themeId = parsed.pathname.split("/")[3];
-    const themes = getThemes();
-    const theme = themes.find(t => t.id === themeId);
-    if (theme && theme.hasFile) {
-      const filePath = path.join(theme.path, theme.image);
-      const ext = path.extname(filePath).toLowerCase();
-      const mimeTypes = {
-        ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
-        ".webp": "image/webp", ".gif": "image/gif"
-      };
-      if (mimeTypes[ext]) {
-        const data = fs.readFileSync(filePath);
-        res.writeHead(200, { "Content-Type": mimeTypes[ext] });
-        res.end(data);
-      } else {
-        // For video files, return a placeholder
-        res.writeHead(200, { "Content-Type": "image/svg+xml" });
-        res.end('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="120" viewBox="0 0 300 120"><rect fill="#1a1a25" width="300" height="120"/><text fill="#888898" font-family="sans-serif" font-size="14" x="150" y="65" text-anchor="middle">VIDEO PREVIEW</text></svg>');
-      }
-    } else {
-      res.writeHead(404);
-      res.end("Not Found");
-    }
-  } else {
+  } 
+  else {
     res.writeHead(404);
     res.end("Not Found");
   }
@@ -223,10 +236,11 @@ function killPort(port) {
     }
   } catch (e) {}
 }
+
 killPort(PORT);
+
 server.listen(PORT, () => {
   console.log(`Codex Skin Plus Manager running at http://localhost:${PORT}`);
-  // Auto open browser
   const openCmd = process.platform === "win32" ? "start" : "open";
   execSync(`${openCmd} http://localhost:${PORT}`, { stdio: "ignore" });
 });
