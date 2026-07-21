@@ -1,170 +1,126 @@
-# Codex Dream Skin
+﻿# Codex Dream Skin
 
-给 Codex 桌面版换上动态视频壁纸主题，支持磨砂毛玻璃效果和二次元风格。
-
+缁?Codex 妗岄潰鐗堟崲涓婂姩鎬佽棰戝绾镐富棰橈紝鏀寔纾ㄧ爞姣涚幓鐠冩晥鏋滃拰浜屾鍏冮鏍笺€?
 ![Preview](preview.gif)
 
-## 功能特性
-
-- **动态视频壁纸** - 支持 MP4 视频作为背景
-- **磨砂毛玻璃效果** - 半透明界面，隐约透出背景
-- **金色主题配色** - 蒙德城夜景风格，温暖柔和
-- **自动注入** - 一键启动，自动应用主题
-- **无需修改源码** - 通过 CDP 协议注入，不破坏原文件
-
-## 系统要求
+## 鍔熻兘鐗规€?
+- **鍔ㄦ€佽棰戝绾?* - 鏀寔 MP4 瑙嗛浣滀负鑳屾櫙
+- **纾ㄧ爞姣涚幓鐠冩晥鏋?* - 鍗婇€忔槑鐣岄潰锛岄殣绾﹂€忓嚭鑳屾櫙
+- **閲戣壊涓婚閰嶈壊** - 钂欏痉鍩庡鏅鏍硷紝娓╂殩鏌斿拰
+- **鑷姩娉ㄥ叆** - 涓€閿惎鍔紝鑷姩搴旂敤涓婚
+- **鏃犻渶淇敼婧愮爜** - 閫氳繃 CDP 鍗忚娉ㄥ叆锛屼笉鐮村潖鍘熸枃浠?
+## 绯荤粺瑕佹眰
 
 - Windows 10/11
-- [Node.js](https://nodejs.org/) 16.0 或更高版本
-- Codex 桌面版已安装
+- [Node.js](https://nodejs.org/) 16.0 鎴栨洿楂樼増鏈?- Codex 妗岄潰鐗堝凡瀹夎
 
-## 快速安装
+## 蹇€熷畨瑁?
+### 鏂规硶涓€锛氫竴閿畨瑁咃紙鎺ㄨ崘锛?
+1. 涓嬭浇鏈粨搴撳埌鏈湴
+2. 鍙屽嚮杩愯 `install.bat`
+3. 鎸夋彁绀哄畬鎴愬畨瑁?
+### 鏂规硶浜岋細鎵嬪姩瀹夎
 
-### 方法一：一键安装（推荐）
-
-1. 下载本仓库到本地
-2. 双击运行 `install.bat`
-3. 按提示完成安装
-
-### 方法二：手动安装
-
-1. 下载本仓库到本地，例如放到 `E:\codex\Codex-Dream-Skin`
-2. 确保 Node.js 已安装（在命令行输入 `node --version` 检查）
-3. 运行以下命令：
-   ```powershell
+1. 涓嬭浇鏈粨搴撳埌鏈湴锛屼緥濡傛斁鍒?`E:\codex\Codex-Dream-Skin`
+2. 纭繚 Node.js 宸插畨瑁咃紙鍦ㄥ懡浠よ杈撳叆 `node --version` 妫€鏌ワ級
+3. 杩愯浠ヤ笅鍛戒护锛?   ```powershell
    powershell -ExecutionPolicy Bypass -File "E:\codex\Codex-Dream-Skin\launch-codex-dream.ps1"
    ```
 
-## 使用方法
+## 浣跨敤鏂规硶
 
-### 启动带皮肤的 Codex
+### 鍚姩甯︾毊鑲ょ殑 Codex
 
-**方式一：双击启动**
-- 双击 `E:\codex\Codex-Dream-Skin\install.bat` 创建的 `launch-codex.bat`（在 Codex 安装目录）
-
-**方式二：直接运行**
+**鏂瑰紡涓€锛氬弻鍑诲惎鍔?*
+- 鍙屽嚮 `E:\codex\Codex-Dream-Skin\install.bat` 鍒涘缓鐨?`launch-codex.bat`锛堝湪 Codex 瀹夎鐩綍锛?
+**鏂瑰紡浜岋細鐩存帴杩愯**
 ```powershell
 powershell -ExecutionPolicy Bypass -File "E:\codex\Codex-Dream-Skin\launch-codex-dream.ps1"
 ```
 
-### 首次使用
+### 棣栨浣跨敤
 
-1. 关闭正在运行的 Codex
-2. 运行上述启动命令
-3. Codex 会自动开启调试端口（30123）
-4. 主题会自动注入，等待几秒即可看到效果
+1. 鍏抽棴姝ｅ湪杩愯鐨?Codex
+2. 杩愯涓婅堪鍚姩鍛戒护
+3. Codex 浼氳嚜鍔ㄥ紑鍚皟璇曠鍙ｏ紙30123锛?4. 涓婚浼氳嚜鍔ㄦ敞鍏ワ紝绛夊緟鍑犵鍗冲彲鐪嬪埌鏁堟灉
 
-### 切换主题
+### 鍒囨崲涓婚
 
-编辑 `themes/mondstadt-night/theme.json` 可自定义：
-- `accent` - 主题强调色（金色：#E8B84B）
-- `surface` - 界面背景色
-- `ink` - 文字颜色
-- `image` - 背景视频文件名
-
-## 项目结构
+缂栬緫 `themes/mondstadt-dusk/theme.json` 鍙嚜瀹氫箟锛?- `accent` - 涓婚寮鸿皟鑹诧紙閲戣壊锛?E8B84B锛?- `surface` - 鐣岄潰鑳屾櫙鑹?- `ink` - 鏂囧瓧棰滆壊
+- `image` - 鑳屾櫙瑙嗛鏂囦欢鍚?
+## 椤圭洰缁撴瀯
 
 ```
 Codex-Dream-Skin/
-├── install.bat                    # 一键安装脚本
-├── launch-codex-dream.ps1        # 主启动脚本
-├── engine/
-│   ├── inject-video-theme.cjs    # CDP 注入器
-│   └── dream-skin.css            # 主题样式表
-├── themes/
-│   └── mondstadt-night/          # 蒙德城夜景主题
-│       ├── theme.json            # 主题配置
-│       └── mondstadt-night.mp4   # 背景视频
-└── README.md
+鈹溾攢鈹€ install.bat                    # 涓€閿畨瑁呰剼鏈?鈹溾攢鈹€ launch-codex-dream.ps1        # 涓诲惎鍔ㄨ剼鏈?鈹溾攢鈹€ engine/
+鈹?  鈹溾攢鈹€ inject-video-theme.cjs    # CDP 娉ㄥ叆鍣?鈹?  鈹斺攢鈹€ dream-skin.css            # 涓婚鏍峰紡琛?鈹溾攢鈹€ themes/
+鈹?  鈹斺攢鈹€ mondstadt-dusk/          # 钂欏痉鍩庡鏅富棰?鈹?      鈹溾攢鈹€ theme.json            # 涓婚閰嶇疆
+鈹?      鈹斺攢鈹€ mondstadt-dusk.mp4   # 鑳屾櫙瑙嗛
+鈹斺攢鈹€ README.md
 ```
 
-## 自定义视频壁纸
+## 鑷畾涔夎棰戝绾?
+1. 鍑嗗涓€涓?MP4 瑙嗛鏂囦欢锛堝缓璁?1080p锛?5MB 浠ュ唴锛?2. 澶嶅埗鍒?`themes/mondstadt-dusk/` 鐩綍
+3. 淇敼 `theme.json` 涓殑 `image` 瀛楁涓轰綘鐨勬枃浠跺悕
+4. 閲嶆柊杩愯鍚姩鑴氭湰
 
-1. 准备一个 MP4 视频文件（建议 1080p，15MB 以内）
-2. 复制到 `themes/mondstadt-night/` 目录
-3. 修改 `theme.json` 中的 `image` 字段为你的文件名
-4. 重新运行启动脚本
+## 宸ヤ綔鍘熺悊
 
-## 工作原理
+鏈」鐩娇鐢?Chrome DevTools Protocol (CDP) 娉ㄥ叆涓婚锛?
+1. 鍚姩 Codex 鏃跺紑鍚繙绋嬭皟璇曠鍙ｏ紙30123锛?2. 閫氳繃 WebSocket 杩炴帴鍒?Codex 鐨勬覆鏌撹繘绋?3. 娉ㄥ叆 CSS 鏍峰紡琛ㄥ拰瑙嗛鑳屾櫙
+4. 璁剧疆姣涚幓鐠冩晥鏋滃拰閫忔槑鑳屾櫙
 
-本项目使用 Chrome DevTools Protocol (CDP) 注入主题：
+**浼樼偣锛?*
+- 涓嶄慨鏀?Codex 鍘熷鏂囦欢
+- 鏇存柊 Codex 鍚庝粛鍙娇鐢?- 闅忔椂鍙仮澶嶅師鐢熺晫闈?
+**娉ㄦ剰锛?*
+- 姣忔閲嶅惎 Codex 閮介渶瑕侀噸鏂版敞鍏?- 寤鸿浣跨敤鍚姩鑴氭湰鑰岄潪鐩存帴鎵撳紑 Codex
 
-1. 启动 Codex 时开启远程调试端口（30123）
-2. 通过 WebSocket 连接到 Codex 的渲染进程
-3. 注入 CSS 样式表和视频背景
-4. 设置毛玻璃效果和透明背景
+## 甯歌闂
 
-**优点：**
-- 不修改 Codex 原始文件
-- 更新 Codex 后仍可使用
-- 随时可恢复原生界面
+### Q: 鍚姩鍚庢病鏈夌湅鍒颁富棰樻晥鏋滐紵
+A: 纭繚锛?- 宸插叧闂墍鏈?Codex 绐楀彛
+- 浣跨敤鍚姩鑴氭湰鑰岄潪鐩存帴鎵撳紑 Codex
+- Node.js 宸叉纭畨瑁?
+### Q: 瑙嗛鎾斁鍗￠】锛?A: 灏濊瘯锛?- 浣跨敤鏇村皬鐨勮棰戞枃浠讹紙< 10MB锛?- 闄嶄綆瑙嗛鍒嗚鲸鐜囷紙720p锛?- 浣跨敤鏇寸煭鐨勮棰戝惊鐜?
+### Q: 濡備綍鎭㈠鍘熺敓鐣岄潰锛?A: 鐩存帴閲嶅惎 Codex锛堜笉鐢ㄥ惎鍔ㄨ剼鏈級鍗冲彲鎭㈠銆?
+### Q: 鏇存柊 Codex 鍚庝富棰樺け鏁堬紵
+A: 閲嶆柊杩愯鍚姩鑴氭湰鍗冲彲锛屾棤闇€閲嶆柊瀹夎銆?
+## 鑷畾涔夊紑鍙?
+### 淇敼 CSS 鏍峰紡
 
-**注意：**
-- 每次重启 Codex 都需要重新注入
-- 建议使用启动脚本而非直接打开 Codex
+缂栬緫 `engine/dream-skin.css`锛屼娇鐢ㄦ祻瑙堝櫒寮€鍙戣€呭伐鍏锋煡鐪嬪厓绱犵被鍚嶏細
+- `html.codex-dream-skin` - 鏍归€夋嫨鍣?- `aside.app-shell-left-panel` - 宸︿晶杈规爮
+- `main.main-surface` - 涓诲唴瀹瑰尯
+- `.composer-surface-chrome` - 杈撳叆妗嗗尯鍩?
+### 鍒涘缓鏂颁富棰?
+1. 澶嶅埗 `themes/mondstadt-dusk/` 鐩綍
+2. 鏇挎崲瑙嗛鏂囦欢
+3. 淇敼 `theme.json` 閰嶇疆
+4. 鏇存柊鍚姩鑴氭湰涓殑涓婚璺緞
 
-## 常见问题
-
-### Q: 启动后没有看到主题效果？
-A: 确保：
-- 已关闭所有 Codex 窗口
-- 使用启动脚本而非直接打开 Codex
-- Node.js 已正确安装
-
-### Q: 视频播放卡顿？
-A: 尝试：
-- 使用更小的视频文件（< 10MB）
-- 降低视频分辨率（720p）
-- 使用更短的视频循环
-
-### Q: 如何恢复原生界面？
-A: 直接重启 Codex（不用启动脚本）即可恢复。
-
-### Q: 更新 Codex 后主题失效？
-A: 重新运行启动脚本即可，无需重新安装。
-
-## 自定义开发
-
-### 修改 CSS 样式
-
-编辑 `engine/dream-skin.css`，使用浏览器开发者工具查看元素类名：
-- `html.codex-dream-skin` - 根选择器
-- `aside.app-shell-left-panel` - 左侧边栏
-- `main.main-surface` - 主内容区
-- `.composer-surface-chrome` - 输入框区域
-
-### 创建新主题
-
-1. 复制 `themes/mondstadt-night/` 目录
-2. 替换视频文件
-3. 修改 `theme.json` 配置
-4. 更新启动脚本中的主题路径
-
-## 许可证
-
+## 璁稿彲璇?
 MIT License
 
-## 致谢
+## 鑷磋阿
 
-- 原理参考：[Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin)
-- 视频来源：原神蒙德城夜景
+- 鍘熺悊鍙傝€冿細[Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin)
+- 瑙嗛鏉ユ簮锛氬師绁炶挋寰峰煄澶滄櫙
 
 ---
 
-**提示：** 如果你遇到问题，可以复制下面的提示词给 AI，让它帮你解决：
+**鎻愮ず锛?* 濡傛灉浣犻亣鍒伴棶棰橈紝鍙互澶嶅埗涓嬮潰鐨勬彁绀鸿瘝缁?AI锛岃瀹冨府浣犺В鍐筹細
 
 ```
-我想给 Codex 桌面版换皮肤，使用 Codex Dream Skin 项目。
-项目地址：https://github.com/你的用户名/Codex-Dream-Skin
+鎴戞兂缁?Codex 妗岄潰鐗堟崲鐨偆锛屼娇鐢?Codex Dream Skin 椤圭洰銆?椤圭洰鍦板潃锛歨ttps://github.com/浣犵殑鐢ㄦ埛鍚?Codex-Dream-Skin
 
-请帮我：
-1. 检查 Node.js 是否已安装
-2. 克隆仓库到 E:\codex\Codex-Dream-Skin
-3. 运行安装脚本
-4. 启动带主题的 Codex
+璇峰府鎴戯細
+1. 妫€鏌?Node.js 鏄惁宸插畨瑁?2. 鍏嬮殕浠撳簱鍒?E:\codex\Codex-Dream-Skin
+3. 杩愯瀹夎鑴氭湰
+4. 鍚姩甯︿富棰樼殑 Codex
 
-如果遇到问题，请检查：
-- Codex 安装路径是否正确
-- 调试端口 30123 是否被占用
-- 视频文件是否完整
+濡傛灉閬囧埌闂锛岃妫€鏌ワ細
+- Codex 瀹夎璺緞鏄惁姝ｇ‘
+- 璋冭瘯绔彛 30123 鏄惁琚崰鐢?- 瑙嗛鏂囦欢鏄惁瀹屾暣
 ```
+

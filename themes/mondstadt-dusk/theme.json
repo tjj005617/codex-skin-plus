@@ -1,6 +1,6 @@
-{
-    "id": "genshin-mondstadt-video",
-    "name": "Mondstadt Night View",
+﻿{
+    "id": "genshin-mondstadt-dusk",
+    "name": "Mondstadt Dusk",
     "palette": {
         "ink": "#E8E0D0",
         "opaqueWindows": false,
@@ -19,6 +19,7 @@
         "focusX": 0.5,
         "taskMode": "ambient"
     },
-    "image": "mondstadt-night.mp4",
+    "image": "mondstadt-dusk.mp4",
     "appearance": "dark"
 }
+

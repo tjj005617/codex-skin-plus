@@ -1,4 +1,4 @@
-# launch-codex-dream.ps1 - One-click: launch Codex + inject video wallpaper
+﻿# launch-codex-dream.ps1 - One-click: launch Codex + inject video wallpaper
 $ErrorActionPreference = 'SilentlyContinue'
 
 # Auto-detect paths
@@ -6,7 +6,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $CodexExe = 'E:\codex\Codex\ChatGPT.exe'
 $Port = 30123
 $InjectorScript = Join-Path $ScriptDir "engine\inject-video-theme.cjs"
-$ThemeDir = Join-Path $ScriptDir "themes\mondstadt-night"
+$ThemeDir = Join-Path $ScriptDir "themes\mondstadt-dusk"
 $ActiveThemeDir = Join-Path $ScriptDir "active-theme"
 
 # Check if Codex exists
@@ -109,3 +109,4 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 Start-Sleep -Seconds 2
+
