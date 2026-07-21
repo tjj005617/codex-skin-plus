@@ -1,0 +1,24 @@
+﻿{
+    "id":  "example-image",
+    "name":  "Example Image Theme",
+    "art":  {
+                "focusY":  0.4,
+                "safeArea":  "center",
+                "focusX":  0.5,
+                "taskMode":  "ambient"
+            },
+    "palette":  {
+                    "ink":  "#E8E0D0",
+                    "opaqueWindows":  false,
+                    "accent":  "#E8B84B",
+                    "diffRemoved":  "#E8A0B0",
+                    "surface":  "#0F1320",
+                    "uiFont":  "Microsoft YaHei UI",
+                    "codeFont":  "Cascadia Code",
+                    "diffAdded":  "#7EC8A0",
+                    "contrast":  50,
+                    "skill":  "#C0A0E8"
+                },
+    "image":  "wallpaper.jpg",
+    "appearance":  "dark"
+}
