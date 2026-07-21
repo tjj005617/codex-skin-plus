@@ -251,11 +251,15 @@
           </select>
         </div>
         <div class="form-group">
-          <label>File Path</label>
-          <input type="text" id="newThemeFile" placeholder="D:\wallpapers\my-video.mp4">
+          <label>File</label>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="newThemeFile" placeholder="Select file..." readonly style="flex:1">
+            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">Browse</button>
+            <input type="file" id="fileInput" accept="video/mp4,video/webm,image/jpeg,image/png,image/webp" style="display:none" onchange="handleFileSelect(this)">
+          </div>
         </div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="createTheme()">Create Theme</button>
+          <button class="btn btn-primary" onclick="uploadAndCreateTheme()">Upload & Create</button>
         </div>
       </div>
       <div class="page" id="palette">
@@ -309,6 +313,7 @@
         <div class="btn-row">
           <button class="btn btn-primary" onclick="saveSettings()">Save</button>
           <button class="btn btn-danger" onclick="restoreOriginal()">Remove Skin</button>
+          <button class="btn btn-secondary" onclick="restoreDefault()">Restore Codex Default</button>
         </div>
       </div>
     </div>
@@ -398,7 +403,7 @@
       if (t.type === 'video') {
         previewHtml = `
           <video src="${previewUrl}" muted loop preload="none" style="background:#1a1a25"></video>
-          <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          
         `;
       } else {
         previewHtml = `<img src="${previewUrl}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="background:#1a1a25"><div class="placeholder" style="display:none">${t.name}</div>`;
@@ -439,7 +444,60 @@
         showToast('Theme created!', 'success');
         document.getElementById('newThemeName').value = '';
         document.getElementById('newThemeFile').value = '';
-        loadThemes();
+    
+    // File upload handler
+    function handleFileSelect(input) {
+      if (input.files && input.files[0]) {
+        window.selectedFile = input.files[0];
+        document.getElementById('newThemeFile').value = input.files[0].name;
+        // Auto-detect type
+        const ext = input.files[0].name.split('.').pop().toLowerCase();
+        const isVideo = ['mp4', 'webm'].includes(ext);
+        document.getElementById('newThemeType').value = isVideo ? 'video' : 'image';
+      }
+    }
+
+    // Upload and create theme
+    async function uploadAndCreateTheme() {
+      const name = document.getElementById('newThemeName').value;
+      const type = document.getElementById('newThemeType').value;
+      if (!name) { showToast('Please enter a theme name', 'error'); return; }
+      if (!window.selectedFile) { showToast('Please select a file', 'error'); return; }
+
+      const formData = new FormData();
+      formData.append('file', window.selectedFile);
+      formData.append('name', name);
+      formData.append('type', type);
+
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const result = await res.json();
+        if (result.ok) {
+          showToast('Theme created!', 'success');
+          document.getElementById('newThemeName').value = '';
+          document.getElementById('newThemeFile').value = '';
+          window.selectedFile = null;
+          loadThemes();
+        } else {
+          showToast(result.error || 'Upload failed', 'error');
+        }
+      } catch (e) {
+        showToast('Upload failed: ' + e.message, 'error');
+      }
+    }
+
+    // Restore Codex default
+    async function restoreDefault() {
+      if (!confirm('Restore Codex to default appearance? This will remove the skin.')) return;
+      const result = await api('/api/restore-default', 'POST');
+      if (result.ok) {
+        showToast('Restored to default! Restart Codex.', 'success');
+        currentConfig.currentTheme = null;
+        renderThemes();
+      }
+    }
+
+    loadThemes();
       } else {
         showToast(result.error, 'error');
       }
